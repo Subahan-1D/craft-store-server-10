@@ -31,6 +31,13 @@ async function run() {
 
         const craftCollection = client.db ('craftStoredb').collection('craft')
 
+        app.post('/categories', async (req,res)=>{
+            const newCraftStore = req.body;
+            console.log(newCraftStore);
+            const result = await  craftCollection.insertOne(newCraftStore)
+            res.send(result);
+        })
+
 
 
 
