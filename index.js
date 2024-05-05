@@ -46,6 +46,10 @@ async function run() {
             res.send(result)
           })
 
+          app.put('/categories/:id', async (req,res)=>{
+            
+          })
+
         app.post('/categories', async (req,res)=>{
             const newCraftStore = req.body;
             console.log(newCraftStore);
