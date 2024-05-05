@@ -39,9 +39,7 @@ async function run() {
             res.send(result)
           })
 
-          app.get('/categories/:id', async (req,res)=>{
-            
-          })
+       
 
         app.post('/categories', async (req,res)=>{
             const newCraftStore = req.body;
