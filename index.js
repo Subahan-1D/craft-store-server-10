@@ -29,37 +29,59 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
 
-        const craftCollection = client.db ('craftStoredb').collection('craft');
+        const craftCollection = client.db('craftStoredb').collection('craft');
 
 
 
-        app.get('/categories', async (req,res)=>{
+        app.get('/categories', async (req, res) => {
             const cursor = craftCollection.find();
             const result = await cursor.toArray();
             res.send(result)
-          })
+        })
 
-          app.get('/categories/:id', async (req,res)=>{
+        app.put('/categories/:id', async (req, res) => {
             const id = req.params.id;
-            const query = {_id: new ObjectId (id)}
-            const  result = await craftCollection.findOne(query);
+            const filter = { _id: new ObjectId(id) }
+            const options = { upsert: true };
+            const updatedCraft = req.body;
+            const craft = {
+                $set: {
+                    image: updatedCraft.image,
+                    subCategoryName: updatedCraft.subCategoryName,
+                    price: updatedCraft.price,
+                    customization: updatedCraft.customization,
+                    stockStatus: updatedCraft.stockStatus,
+                    item: updatedCraft.item,
+                    description: updatedCraft.description,
+                    rating: updatedCraft.rating,
+                    processingTime: updatedCraft.processingTime
+                }
+            }
+            const result = await craftCollection.updateOne(filter,craft,options);
+            res.send(result);
+
+        })
+
+
+        app.get('/categories/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await craftCollection.findOne(query);
             res.send(result)
-          })
+        })
 
-          app.put('/categories/:id', async (req,res)=>{
-            
-          })
 
-        app.post('/categories', async (req,res)=>{
+
+        app.post('/categories', async (req, res) => {
             const newCraftStore = req.body;
             console.log(newCraftStore);
-            const result = await  craftCollection.insertOne(newCraftStore)
+            const result = await craftCollection.insertOne(newCraftStore)
             res.send(result);
         })
 
-        app.delete('/categories/:id', async(req,res)=>{
+        app.delete('/categories/:id', async (req, res) => {
             const id = req.params.id;
-            const query = {_id : new ObjectId (id)}
+            const query = { _id: new ObjectId(id) }
             const result = await craftCollection.deleteOne(query);
             res.send(result);
         })
