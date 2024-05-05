@@ -39,7 +39,12 @@ async function run() {
             res.send(result)
           })
 
-       
+          app.get('/categories/:id', async (req,res)=>{
+            const id = req.params.id;
+            const query = {_id: new ObjectId (id)}
+            const  result = await craftCollection.findOne(query);
+            res.send(result)
+          })
 
         app.post('/categories', async (req,res)=>{
             const newCraftStore = req.body;
