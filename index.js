@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 
 // MIDDLEWARE
@@ -29,12 +29,31 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
 
-        const craftCollection = client.db ('craftStoredb').collection('craft')
+        const craftCollection = client.db ('craftStoredb').collection('craft');
+
+
+
+        app.get('/categories', async (req,res)=>{
+            const cursor = craftCollection.find();
+            const result = await cursor.toArray();
+            res.send(result)
+          })
+
+          app.get('/categories/:id', async (req,res)=>{
+            
+          })
 
         app.post('/categories', async (req,res)=>{
             const newCraftStore = req.body;
             console.log(newCraftStore);
             const result = await  craftCollection.insertOne(newCraftStore)
+            res.send(result);
+        })
+
+        app.delete('/categories/:id', async(req,res)=>{
+            const id = req.params.id;
+            const query = {_id : new ObjectId (id)}
+            const result = await craftCollection.deleteOne(query);
             res.send(result);
         })
 
